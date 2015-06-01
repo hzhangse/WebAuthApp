@@ -1,0 +1,58 @@
+<web-app xmlns="http://caucho.com/ns/resin" xmlns:resin="urn:java:com.caucho.resin">
+
+
+
+	<database>
+		<jndi-name>jdbc/digest</jndi-name>
+		<driver>
+			<type>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource
+			</type>
+			<url>jdbc:mysql://localhost:3306/digest</url>
+			<user>root</user>
+			<password></password>
+
+			<useUnicode />
+		</driver>
+
+	</database>
+
+<resin:FormLogin form-login-page="/app/jsp/security/protected/login.jsp"
+                      form-error-page="/app/jsp/security/protected/error.jsp">
+
+		
+	</resin:FormLogin>
+	
+	<resin:Allow url-pattern="/jsp/*">
+		<resin:IfUserInRole role="admin" />
+	</resin:Allow>
+
+	<resin:Allow url-pattern="/servlets/*">
+	
+		<resin:IfUserInRole role="user" />
+	</resin:Allow>
+	
+
+	
+
+	
+	<resin:DatabaseAuthenticator>
+		
+		<resin:data-source>jdbc/digest</resin:data-source>
+		<resin:password-query>
+			SELECT user_pass FROM users WHERE user_name=?
+		</resin:password-query>
+		<resin:cookie-auth-query>
+			SELECT user_name FROM users WHERE cookie=?
+		</resin:cookie-auth-query>
+		<resin:cookie-auth-update>
+			UPDATE users SET cookie=? WHERE user_name=?
+		</resin:cookie-auth-update>
+		<resin:role-query>
+			SELECT role_name FROM roles WHERE user_name=?
+		</resin:role-query>
+		
+		<resin:password-digest-realm>www.rainbow954-digest.cn</resin:password-digest-realm>
+	
+	</resin:DatabaseAuthenticator>
+</web-app>
+
