@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>HttpDigest</display-name>
+	
+	<security-constraint>
+		<display-name>Doc Auth</display-name>
+		<web-resource-collection>
+			<web-resource-name>Doc Protected Area</web-resource-name>			
+			<url-pattern>/doc/*</url-pattern>
+			<http-method>DELETE</http-method>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>user</role-name>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<display-name>App Auth</display-name>
+		<web-resource-collection>
+			<web-resource-name>App Protected Area</web-resource-name>
+			<url-pattern>/app/*</url-pattern>
+			<http-method>DELETE</http-method>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<!-- 设置该Web应用使用到的角色 -->
+	<security-role>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role>
+		<role-name>user</role-name>
+	</security-role>
+ 	
+	<!-- 摘要认证方式 -->
+	<login-config>
+		<auth-method>DIGEST</auth-method>
+		<!--  auth-method>BASIC</auth-method>-->
+		<realm-name>www.rainbow954-digest.cn</realm-name>
+	</login-config>
+	
+</web-app>

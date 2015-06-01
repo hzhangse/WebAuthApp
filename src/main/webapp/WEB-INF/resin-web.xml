@@ -16,25 +16,42 @@
 
 	</database>
 
-<resin:FormLogin form-login-page="/app/jsp/security/protected/login.jsp"
-                      form-error-page="/app/jsp/security/protected/error.jsp">
 
-		
+
+
+	<!--  
+	<resin:DigestLogin>
+		<resin:realmName>www.rainbow954-digest.cn</resin:realmName>
+	</resin:DigestLogin>
+	<resin:FormLogin form-login-page="/app/jsp/security/protected/login.jsp"
+                      form-error-page="/app/jsp/security/protected/error.jsp">	
 	</resin:FormLogin>
+	<resin:BasicLogin>
+	<resin:realmName>www.rainbow954-digest.cn</resin:realmName>
+	</resin:BasicLogin>
 	
+	
+	-->
+	
+	
+
+
+
 	<resin:Allow url-pattern="/jsp/*">
 		<resin:IfUserInRole role="admin" />
 	</resin:Allow>
 
 	<resin:Allow url-pattern="/servlets/*">
-	
+
 		<resin:IfUserInRole role="user" />
 	</resin:Allow>
 	
-
 	
 
+	<resin:Allow url-pattern="/doc/*">
 	
+		<resin:IfUserInRole role="user" />
+	</resin:Allow>
 	<resin:DatabaseAuthenticator>
 		
 		<resin:data-source>jdbc/digest</resin:data-source>
