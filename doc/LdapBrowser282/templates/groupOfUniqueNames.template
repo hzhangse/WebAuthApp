@@ -1,0 +1,12 @@
+# name : groupOfUniqueNames
+#
+# objectClass : groupOfUniqueNames
+#
+
+PREFIX: cn
+
+REQUIRED ATTRIBUTES
+
+OPTIONAL ATTRIBUTES
+uniqueMember
+cn
