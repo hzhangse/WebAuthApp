@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<s:http>
+		<s:intercept-url pattern="/**" access="ROLE_RED" />
+
+		<s:form-login />
+		<s:anonymous />
+		<s:logout />
+	</s:http>
+
+	<s:authentication-manager>
+
+		<s:authentication-provider ref='ldapAuthProvider' />
+	</s:authentication-manager>
+
+	<!-- Traditional Bean version of the same configuration -->
+	<bean id="contextSource"
+		class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://127.0.0.1:389/dc=train,dc=com" />
+		<property name="userDn" value="cn=Manager,dc=train,dc=com" />
+		<property name="password" value="secret" />
+	</bean>
+
+	<bean id="ldapAuthProvider"
+		class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userDnPatterns">
+					<list>
+						<value>uid={0},ou=people</value>
+					</list>
+				</property>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+				<constructor-arg ref="contextSource" />
+				<constructor-arg value="ou=roles" />
+				<property name="groupRoleAttribute" value="cn" />
+				<property name="groupSearchFilter" value="uniqueMember={0}" />
+			</bean>
+		</constructor-arg>
+	</bean>
+</beans>
