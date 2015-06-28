@@ -21,6 +21,29 @@ uniqueMember: uid=sspecial,ou=people,dc=train,dc=com
 uniqueMember: uid=jbloggs,ou=people,dc=train,dc=com
 uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
 
+
+dn: cn=MANAGER,ou=roles,dc=train,dc=com
+objectClass: groupOfUniqueNames
+cn: MANAGER
+uniqueMember: uid=bob,ou=people,dc=train,dc=com
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+
+dn: cn=USER,ou=roles,dc=train,dc=com
+objectClass: groupOfUniqueNames
+cn: USER
+uniqueMember: uid=bob,ou=people,dc=train,dc=com
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+uniqueMember: uid=alex,ou=people,dc=train,dc=com
+uniqueMember: uid=dale,ou=people,dc=train,dc=com
+
+dn: cn=PRESIDENT,ou=roles,dc=train,dc=com
+objectClass: groupOfUniqueNames
+cn: PRESIDENT
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+
 dn: cn=Special Users,ou=roles,dc=train,dc=com
 objectClass: groupOfUniqueNames
 cn: Special Users
@@ -33,10 +56,7 @@ cn: Admin Users
 uniqueMember: uid=admin,ou=people,dc=train,dc=com
 uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
 
-dn: cn=user,ou=roles,dc=train,dc=com
-objectClass: groupOfUniqueNames
-cn: user
-uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+
 
 dn: cn=admin,ou=roles,dc=train,dc=com
 objectClass: groupOfUniqueNames
@@ -86,3 +106,46 @@ mail: 2387362072@qq.com
 sn: zhanghong 
 uid: hzhangse
 userPassword: hzhangse
+
+dn: uid=mary,ou=people,dc=train,dc=com
+objectClass: person
+objectClass: inetOrgPerson
+cn: Mary
+displayName: Mary
+givenName: Mary
+mail: 2387362072@qq.com
+sn: mary 
+uid: mary
+userPassword: mary
+
+dn: uid=bob,ou=people,dc=train,dc=com
+objectClass: person
+objectClass: inetOrgPerson
+cn: Bob
+displayName: Bob
+givenName: Bob
+mail: 2387362072@qq.com
+sn: bob 
+uid: bob
+userPassword: bob
+
+dn: uid=alex,ou=people,dc=train,dc=com
+objectClass: person
+objectClass: inetOrgPerson
+cn: alex
+displayName: alex
+givenName: alex
+mail: 2387362072@qq.com
+sn: alex 
+uid: alex
+userPassword: alex
+
+dn: uid=dale,ou=people,dc=train,dc=com
+objectClass: person
+objectClass: inetOrgPerson
+cn: dale
+displayName: dale
+givenName: dale
+mail: 2387362072@qq.com
+sn: dale 
+uid: dale
