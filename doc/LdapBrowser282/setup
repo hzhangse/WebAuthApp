@@ -1,0 +1,157 @@
+dn: dc=train,dc=com
+dc: train
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: example
+
+dn: cn=admin, dc=train,dc=com
+userPassword:: e1NTSEF9QlY2a1pOSWMwczNiOVlwT1RJSTRzRDJjUVpoN29HNTc=
+description: LDAP administrator
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+
+dn: ou=roles, dc=train,dc=com
+ou: roles
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=people, dc=train,dc=com
+ou: people
+objectClass: top
+objectClass: organizationalUnit
+
+dn: cn=Test Users,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=sspecial,ou=people,dc=train,dc=com
+uniqueMember: uid=jbloggs,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+cn: Test Users
+
+dn: cn=MANAGER,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=bob,ou=people,dc=train,dc=com
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+cn: MANAGER
+
+dn: cn=USER,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=bob,ou=people,dc=train,dc=com
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+uniqueMember: uid=alex,ou=people,dc=train,dc=com
+uniqueMember: uid=dale,ou=people,dc=train,dc=com
+cn: USER
+
+dn: cn=PRESIDENT,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=mary,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+cn: PRESIDENT
+
+dn: cn=Special Users,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=sspecial,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+cn: Special Users
+
+dn: cn=Admin Users,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=train,dc=com
+uniqueMember: uid=hzhangse,ou=people,dc=train,dc=com
+cn: Admin Users
+
+dn: cn=admin,ou=roles, dc=train,dc=com
+objectClass: groupOfUniqueNames
+uniqueMember: uid=admin,ou=people,dc=train,dc=com
+cn: admin
+
+dn: uid=admin,ou=people, dc=train,dc=com
+mail: admin@fake.org
+displayName: App Admin
+uid: admin
+userPassword:: YWRtaW5wYXNzd29yZA==
+objectClass: person
+objectClass: inetOrgPerson
+givenName: App
+sn: Admin
+cn: State App
+
+dn: uid=jbloggs,ou=people, dc=train,dc=com
+mail: jbloggs@fake.org
+displayName: Joe Bloggs
+uid: jbloggs
+userPassword:: cGFzc3dvcmQ=
+objectClass: person
+objectClass: inetOrgPerson
+givenName: Joe
+sn: Bloggs
+cn: Joe Bloggs
+
+dn: uid=sspecial,ou=people, dc=train,dc=com
+mail: sspecial@fake.org
+displayName: Super Special
+uid: sspecial
+userPassword:: cGFzc3dvcmQ=
+objectClass: person
+objectClass: inetOrgPerson
+givenName: Super
+sn: Special
+cn: Super Special
+
+dn: uid=hzhangse,ou=people, dc=train,dc=com
+mail: 2387362072@qq.com
+displayName: Zhang Hong
+uid: hzhangse
+userPassword:: aHpoYW5nc2U=
+objectClass: person
+objectClass: inetOrgPerson
+givenName: Ryan
+sn: zhanghong 
+cn: Zhang Hong
+
+dn: uid=mary,ou=people, dc=train,dc=com
+mail: 2387362072@qq.com
+displayName: Mary
+uid: mary
+userPassword:: bWFyeQ==
+objectClass: person
+objectClass: inetOrgPerson
+givenName: Mary
+sn: mary 
+cn: Mary
+
+dn: uid=bob,ou=people, dc=train,dc=com
+mail: 2387362072@qq.com
+displayName: Bob
+uid: bob
+userPassword:: Ym9i
+objectClass: person
+objectClass: inetOrgPerson
+givenName: Bob
+sn: bob 
+cn: Bob
+
+dn: uid=alex,ou=people, dc=train,dc=com
+mail: 2387362072@qq.com
+displayName: alex
+uid: alex
+userPassword:: YWxleA==
+objectClass: person
+objectClass: inetOrgPerson
+givenName: alex
+sn: alex 
+cn: alex
+
+dn: uid=dale,ou=people, dc=train,dc=com
+mail: 2387362072@qq.com
+displayName: dale
+uid: dale
+objectClass: person
+objectClass: inetOrgPerson
+givenName: dale
+sn: dale 
+cn: dale
+

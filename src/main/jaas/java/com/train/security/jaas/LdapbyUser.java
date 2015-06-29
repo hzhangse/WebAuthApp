@@ -72,7 +72,7 @@ public class LdapbyUser {
 	public void init() {
 		Hashtable env = new Hashtable();
 		String LDAP_URL = "ldap://localhost:389"; // LDAP访问地址
-		String adminName = "cn=Manager,dc=train,dc=com"; // 注意用户名的写法：domain\User或
+		String adminName = "cn=admin,dc=train,dc=com"; // 注意用户名的写法：domain\User或
 		String adminPassword = "secret"; // 密码
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
 				"com.sun.jndi.ldap.LdapCtxFactory");

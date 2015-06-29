@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=LBE
+Comment=Graphical runlevel configuration tool
+Exec=sh /home/ryan/workspace/WebAuthApp/doc/LdapBrowser282/lbe.sh
+Icon=bum
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=System
+Name[zh_CN]=lbe

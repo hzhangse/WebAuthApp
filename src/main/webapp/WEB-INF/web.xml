@@ -271,7 +271,7 @@
       <http-method>PUT</http-method>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>user</role-name>
+      <role-name>USER</role-name>
       <role-name>admin</role-name>
     </auth-constraint>
   </security-constraint>
@@ -286,7 +286,7 @@
       <http-method>PUT</http-method>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>user</role-name>
+      <role-name>USER</role-name>
       <role-name>admin</role-name>
     </auth-constraint>
     </security-constraint>
@@ -303,7 +303,7 @@
       <http-method>PUT</http-method>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>user</role-name>
+      <role-name>USER</role-name>
      <role-name>admin</role-name>
     </auth-constraint>
   </security-constraint>
@@ -328,7 +328,7 @@
     </form-login-config>
   </login-config>
   <security-role>
-    <role-name>user</role-name>
+    <role-name>USER</role-name>
   </security-role>
   <security-role>
     <role-name>admin</role-name>

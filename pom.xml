@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.train</groupId>
-	<artifactId>FormAuthApp</artifactId>
+	<artifactId>AuthApp</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>FormAuthApp Maven Webapp</name>
+	<name>AuthApp Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 
@@ -48,7 +48,7 @@
 			<version>8.0.23</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-api</artifactId>
@@ -65,13 +65,13 @@
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
-			
+
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
-			<scope>provided</scope>			
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -79,7 +79,11 @@
 			<version>8.0.20</version>
 			<scope>provided</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.caucho</groupId>
+			<artifactId>resin</artifactId>
+			<version>4.0.28</version>
+		</dependency>
 	</dependencies>
 	<build>
 
@@ -91,12 +95,47 @@
 
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<!-- 我们可以通过在这里添加多个source节点，来添加任意多个源文件夹 -->
+								<source>${basedir}/src/main/jaas/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<!-- 我们可以通过在这里添加多个resource节点 -->
+								<resource>
+									<directory>${basedir}/src/main/jaas/resource</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<compilerArguments>
 						<verbose />

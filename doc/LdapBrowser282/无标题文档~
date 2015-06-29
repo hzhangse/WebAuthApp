@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=lbeBrowser
+Exec=/home/ryan/workspace/WebAuthApp/doc/LdapBrowser282
+Termina=false
+Icon=/home/taolei/sda5/linux/Intellij-13/bin/idea.png
+Type=Application
+Categories=Development
