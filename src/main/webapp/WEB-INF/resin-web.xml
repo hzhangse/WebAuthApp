@@ -9,7 +9,7 @@
 			</type>
 			<url>jdbc:mysql://localhost:3306/digest</url>
 			<user>root</user>
-			<password></password>
+			<password>root</password>
 
 			<useUnicode />
 		</driver>

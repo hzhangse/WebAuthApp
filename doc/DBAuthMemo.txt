@@ -1,0 +1,16 @@
+1. tomcat user　basic/digest 认证流程
+
+通过AuthenticatorBase（DigestAuthenticator／BasicAuthenticator）　按照ｂａｓｉｃ或者ｄｉｇｅｓｔ认证方式，解析出客户端传过来的用户名和密码，然后再用实际值（也就是真实输入的密码）和ｒｅａｌｍ的配置和数据库中的密码比较。
+例如：
+<Realm className="org.apache.catalina.realm.JDBCRealm" 
+		connectionName="root" connectionPassword="root" connectionURL="jdbc:mysql://localhost:3306/digest?useUnicode=true&amp;characterEncoding=utf8" 
+		driverName="com.mysql.jdbc.Driver" roleNameCol="role_name" userCredCol="user_pass" 
+		userNameCol="user_name" userRoleTable="roles" userTable="users" 　digest="MD5"／> 
+
+这时会调用JDBCRealm的ａｕｔｈｅｔｉｃａｔｉｏｎ方法，并根据是否设置digest="ｘｘｘｘ"　属性按照相应的ｅｎｃｒｙｐｔ编码和数据库中实际密码ｖａｌｕｅ比较。如果没有设置ｄｉｇｅｓｔ属性，则密码是明码匹配
+
+
+
+		
+1. ｒｅｓｉｎ user　basic/digest 认证流程
+resin 的认证则直接把客户端的输入密码在服务端按照basic/digest 认证规则生成相应编码，和数据库密码比较，所以数据库端也必须存放相应的加密后的编码。ｂａｓｉｃ数据库中存的就是ｂａｓｅ６４ｃｏｄｅ，而ｄｉｇｅｓｔ方式存的就是ｍｄ５ｔｏ６４加密后的编码
