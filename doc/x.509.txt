@@ -1,0 +1,214 @@
+一.tomcat6配置双向认证
+
+1、生成服务器端证书
+x:\>keytool -genkey -keyalg RSA -alias server -keypass password -keystore server.jks -storepass password -validity 3650 -dname "cn=192.168.1.105,ou=train.com,o=train.com,l=china,st=shanghai,c=cn"
+服务端的CN值必须为域名,不然客户端认证时为非法.
+
+2、生成客户端证书
+X:\>keytool -genkey -keyalg RSA -alias client -storetype PKCS12 -keypass password -storepass password -validity 3650 -keystore client.p12 -dname "cn=client,ou=train.com,o=train.com,l=china,st=shanghai,c=cn"
+
+客户端的CN可以是任意值。
+
+3、由于是双向SSL认证，服务器必须要信任客户端证书，因此，必须把客户端证书添加为服务器的信任认证。由于不能直接将PKCS12格式的证书库导入，我们
+
+(1)必须先把客户端证书导出为一个单独的CER文件，使用如下命令，先把客户端证书导出为一个单独的cer文件：
+X:\>keytool -export -alias client -file client.cer -keystore  client.p12 -storepass password -storetype PKCS12 -rfc   
+
+(2)然后，添加客户端证书到服务器中（将已签名数字证书导入密钥库）
+X:\>keytool -import -v -alias client -file client.cer -keystore  server.jks -storepass password  
+
+4、查看证书详细(-v)内容
+keytool -list -v -keystore server.jks -storepass password  
+
+
+5、配置tomcat service.xml文件
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+               clientAuth="true" sslProtocol="TLS"
+ 		keystoreFile="/home/ryan/work/tools/server/apache-tomcat-8.0.23/ssl/server.jks" keystorePass="password"
+		truststoreFile="/home/ryan/work/tools/server/apache-tomcat-8.0.23/ssl/server.jks" truststorePass="password" 
+           />
+
+不设置truststoreFile,truststorePass属性,即默认指向"%JAVA_HOME%/JRE/LIB/SECURITY/CACERTS"文件(JKS类型),则在双向认证中,需把客户端认证导入到此
+
+文件中.
+clientAuth=”true”表示双向认证
+
+6、导入客户端证书到浏览器
+双向认证需要强制验证客户端证书。双击“custom.p12”即可将证书导入至IE
+
+二.tomcat6配置单向认证
+
+1、生成服务器端证书
+X:\>keytool -genkey -keyalg RSA -dname “cn=localhost,ou=sango,o=none,l=china,st=beijing,c=cn”
+-alias server -keypass password -keystore d:\server.jks -storepass password -validity 3650  
+
+2、由于是单向认证，没有必要生成客户端的证书，直接进入配置tomcat service.xml文件,Xml代码
+<Connector port=”8443″ protocol=”HTTP/1.1″ SSLEnabled=”true” 
+maxThreads=”150″ scheme=”https” secure=”true” 
+clientAuth=”false” sslProtocol=”TLS” 
+keystoreFile=”D:/server.jks” keystorePass=”password”/>
+
+clientAuth=”false”表示单向认证，同时去掉服务端的可信任认证,即:truststoreFile=”D:/server.jks” truststorePass=”password”这2个属性 .
+
+测试说明：
+
+1.请注意本机测试的网址是：https://localhost:8443
+
+2.如果将tomcat的 server.xml 的8443 更改为 443,注意本机的443是否开启。
+
+3.如果你的tomcat 使用了http://localhost:8080,测试网址也是https://localhost:8443
+
+其它：当使用https访问某一域名时，浏览器默认访问服务器的443端口。内部处理后，再转向80处理。所以ssl 全称Security Socket Layer, 加密套接字协议层 名
+
+字没有改错，只是一个加密层
+ 
+
+ 
+ X.509完结
+
+参考文档:  终极武器—数字证书 http://book.51cto.com/art/201004/192437.htm
+
+         用SSL进行双向身份验证意思就是在客户机连接服务器时，链接双方都要对彼此的数字证书进行验证，保证这
+是经过授权的才能够连接（我们链接一般的SSL时采用的是单向验证，客户机只验证服务器的证书，服务器不验证客户
+机的证书。而连接网上银行时使用的U盾就是用来存储进行双向验证所需要的客户端证书的）。
+
+注: 证书更改操作(导入,删除等),都必需重启WEB应用.否则证书库的缓存无法清除.一般客户端的证书不需吊销,也没意义,直接让其无法登陆就行.
+spring security3 的X.509配置在双向认证中,可直接登录,即网银中使用U盾就可以不用输入用户名和密码直接登录系统.
+<http>
+    <intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" requires-channel="https"/>
+    <intercept-url pattern="/**" access="ROLE_USER"  requires-channel="https"/>
+    <x509 subject-principal-regex="CN=(.*?)," user-service-ref="userService"/>
+</http>
+
+<user-service id="userService">
+    <user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN" />
+    <user name="user" password="user" authorities="ROLE_USER" />
+</user-service>
+
+ 
+
+获得安全证书有两种方式：
+(1)一种方式是到权威机构CA购买
+要获得数字证书，我们需要使用数字证书管理工具（如KeyTool和OpenSSL）构建CSR（Certificate Signing Request，数字证书签发申请），交由CA机构签发，
+
+形成最终的数字证书。
+(2)还有一种方式是创建自我签名的证书
+
+keystore:keystore扩展名的文件(即JKS类型)中一般保存的是我们的私钥，用来加解密或者为别人做签名
+truestore:保存的是一些可信任的证书，主要是访问某个https的时候对访问者进行认证，以确保其可信任。
+truststore:双向认证中是必须的，如果没有显式的指定，默认指定为$JAVA_HOME/lib/security/cacerts 这个文件。
+双向SSL认证，服务器必须要信任客户端证书，因此，必须把客户端证书添加为服务器的信任认证中心,即$JAVA_HOME/lib/security/cacerts 这个文件
+1）KeyStore: 其中保存服务端的私钥
+2）Trust KeyStore:其中保存客户端的授权证书
+
+ 
+
+一.Keytool是一个Java数据证书的管理工具。 
+1.keystore 文件
+Keytool是一个证书库文件,可将N个密钥（key）和证书（certificates）存在一个称为keystore的文件中,也即N个条目的意思.
+ 在keystore里，包含两种对应的数据： 
+(1)密钥实体（Key entity）: 密钥（secret key）又或者是私钥和配对公钥（采用非对称加密） 
+(2)可信任的证书实体（trusted certificate entries）: 也可称为公钥.
+
+2.参数说明
+参数说明： 
+-genkey  创建证书库.
+-import      将已签名数字证书导入密钥库  keytool -import -alias sage -keystore sagely -file sagely.crt
+             导入已签名数字证书用keytool -list -v 以后可以明显发现多了认证链长度，并且把整个CA链全部打印出来。
+-delete 删除指定别名的条目(密钥及证书)
+-trustcacerts 表示将数字证书导入信任库。
+-alias 密钥别名(任意不重复).证书实体关联着密钥实体,可通过别名删除整个条目(证书).
+-dname 表示密钥的Distinguished Names， 
+        CN=commonName  即对于服端证书时为网站域名,客户端则任意.通常使用域名或带有通配符“*”的泛域名，如“*.zlex.org”标识用户身份。
+        OU=organizationUnit 
+        O=organizationName 
+        L=localityName 
+        S=stateName 
+        C=country 
+Distinguished Names表明了密钥的发行者身份 
+-keyalg   指定密钥的加密算法，支持RSA(通常)和DSA共2种算法，默认算法为DSA。
+-keypass 密钥的密码
+
+-keystore 指定keystore文件及路径(产生的信息存在.keystore文件中)
+如果不设置,则默认在操作系统的当前用户(如ALGZ)目录下生成名为“.keystore”的文件,还会产生一个mykey的密钥别名,mykey中包含用户的公钥、私钥和证书。
+在Wnidows下，文件的位置为：C:\Documents and Settings\ALGZ\.keystore
+在Linux下，该文件的位置为：home\ALGZ\.keystore
+
+-storepass 访问keystore(密钥库)的密码，这个密码提供系统从mykeystore文件中将信息取出 
+-validity 该密钥的有效期,以天为单位
+
+-keysize     指定密钥长度,以位为单位.
+-file        参数指定导出证书的文件名.
+-sigalg 指定数字签名算法，这里指定为SHA1withRSA算法,通常不用设置。
+-rfc 指定以Base64编码格式输出,通常不设置。
+
+
+3.使用步骤:
+(1)生成证书库
+生成密钥，并以证书库文件方式保存
+ keytool -genkey -alias bogus -keysize 512 -validity 3650 -keyalg RSA -dname "CN=bogus.com, OU=XXX CA, O=Bogus Inc, L=Stockholm, S=Stockholm,
+
+C=SE" -keypass boguspw -storepass boguspw -keystore sean.cert
+
+2.导出证书
+从证书库中(-keystore)将指定别名的证书导出为证书文件(-file)
+例如：keytool -export -keystore monitor.keystore -alias monitor -file monitor.cer
+将把证书库 monitor.keystore 中的别名为 monitor 的证书导出到 monitor.cer 证书文件中.它包含证书主体的信息及证书的公钥，不包括私钥，可以公开。
+keytool -export -keystore d2aApplet.keystore -alias RapaServer -file Rapa.cert -storetype IAIKKeystore
+
+3.导入证书
+将指定别名的证书(-file)中导入到keystore证书库(-keystore)中
+这里向Java默认的证书 cacerts导入Rapa.cert
+keytool -import -alias RapaServer -keystore cacerts -file Rapa.cert 
+通常该命令用以导入来自CA中心的证书（Importing a Certificate for the CA）
+
+4.删除证书库中的条目(即密钥实体与证书实体)
+keytool -delete -alias RapaServer -keystore d2aApplet.keystore ，这条命令将 d2aApplet.keystore 中的 RapaServer 这一条证书删除了。
+
+5.证书条目口令的修改
+使用 -keypasswd 参数，如：keytool -keypasswd -alias RapaServer -keystore d2aApplet.keystore，可以以交互的方式修改 d2aApplet.keystore证书库中的条目
+
+为 RapaServer 的证书。
+Keytool -keypasswd -alias RapaServer -keypass 654321 -new 123456 -storepass 888888 -keystore d2aApplet.keystore这一行命令以非交互式的方式修改库
+
+中别名为 RapaServer 的证书的密码为新密码 654321，行中的 123456 是指该条证书的原密码， 888888 是指证书库的密码。
+
+6. 导出证书到新的TrustStore(信任的证书库)
+ keytool -import -alias 别名 -file 文件名 -keystore truststore
+
+7.    查看Keystore文件内容 
+进入JDK安装目录下的bin目录，运行keytool命令。 
+keytool -list -keystore C:\keystore.jks -storepass password
+
+ -v              显示密钥库中的证书详细信息
+
+***********************************************
+
+cacerts证书文件(The cacerts Certificates File) 
+证书文件存在于java.home\lib\security目录下，是Java系统的CA证书仓库
+
+CA证书的导入（Importing Certificates） 
+命令：
+引用
+keytool -import -alias joe -file jcertfile.cer
+
+这个命令将证书文件jcertfile.cer中别名为joe的证书导入系统的受信任证书列表中 
+通常该命令用以导入来自CA中心的证书（Importing a Certificate for the CA）
+
+导入被CA中心授权的证书（Importing the Certificate Reply from the CA） 
+命令：
+引用
+keytool -import -trustcacerts -file VSMarkJ.cer
+
+ 
+
+证书的导出（Exporting Certificates） 
+命令：
+引用
+keytool -export -alias jane -file janecertfile.cer
+
+这个命令将别名为jane的证书导出到证书文件jcertfile.cer中 
+生成的证书可以交付客户端用户使用，用以进行SSL通讯，或者伴随电子签名的jar包进行发布者的身份认证。
+
+ 
